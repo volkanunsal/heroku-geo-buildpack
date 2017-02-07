@@ -74,13 +74,6 @@ if [ ! -d $CACHE_DIR/$VENDORED_GEOS ]; then
   echo "-----> Fetching and vendoring geos"
   rm -rf "$CACHE_DIR/vendor/geos"
   download_package "geos" "${GEOS_VERSION}" "${CACHE_DIR}/${VENDORED_GEOS}"
-
-  # HACK: Symlinking the binary with version number in its name to a file without
-  # version number.
-  GEOS_SO="$APP_VENDOR/lib/geos-$GEOS_VERSION.so"
-  ln -s "$GEOS_SO" "$APP_VENDOR/lib/libgeos.so"
-  ln -s "$APP_VENDOR/lib/geos-$GEOS_VERSION.so" "$APP_VENDOR/lib/libgeos.so.0"
-  ln -s "$APP_VENDOR/lib/geos-$GEOS_VERSION.so" "$APP_VENDOR/lib/libgeos.so.1"
 fi
 
 if [ ! -d $CACHE_DIR/$VENDORED_GDAL ]; then
@@ -117,7 +110,7 @@ if [ -f $CACHE_DIR/.bundle/config ]; then
   rm $CACHE_DIR/.bundle/config
 fi
 echo "---
-BUNDLE_BUILD__RGEO: "--with-geos-dir=$BUILD_DIR/$TARGET_VENDOR_DIR --with-geos-lib=$BUILD_DIR/$TARGET_VENDOR_DIR/lib --with-proj-dir=$BUILD_DIR/$TARGET_VENDOR_DIR --with-proj-lib=$BUILD_DIR/$TARGET_VENDOR_DIR/lib"
+BUNDLE_BUILD__RGEO: "--with-geos-dir=$BUILD_DIR/$TARGET_VENDOR_DIR --with-geos-lib=$BUILD_DIR/$TARGET_VENDOR_DIR/lib  --with-proj-dir=$BUILD_DIR/$TARGET_VENDOR_DIR --with-proj-lib=$BUILD_DIR/$TARGET_VENDOR_DIR/lib --with-opt-dir=$BUILD_DIR/$TARGET_VENDOR_DIR --with-opt-lib=$BUILD_DIR/$TARGET_VENDOR_DIR/lib --with-opt-include=$BUILD_DIR/$TARGET_VENDOR_DIR/include --with-geos-config=$BUILD_DIR/$TARGET_VENDOR_DIR/bin/geos-config"
 BUNDLE_FROZEN: '1'
 BUNDLE_PATH: vendor/bundle
 BUNDLE_BIN: vendor/bundle/bin
