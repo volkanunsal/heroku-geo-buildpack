@@ -74,6 +74,13 @@ if [ ! -d $CACHE_DIR/$VENDORED_GEOS ]; then
   echo "-----> Fetching and vendoring geos"
   rm -rf "$CACHE_DIR/vendor/geos"
   download_package "geos" "${GEOS_VERSION}" "${CACHE_DIR}/${VENDORED_GEOS}"
+
+  # HACK: Symlinking the binary with version number in its name to a file without
+  # version number.
+  GEOS_SO="$APP_VENDOR/lib/geos-$GEOS_VERSION.so"
+  ln -s "$GEOS_SO" "$APP_VENDOR/lib/libgeos.so"
+  ln -s "$APP_VENDOR/lib/geos-$GEOS_VERSION.so" "$APP_VENDOR/lib/libgeos.so.0"
+  ln -s "$APP_VENDOR/lib/geos-$GEOS_VERSION.so" "$APP_VENDOR/lib/libgeos.so.1"
 fi
 
 if [ ! -d $CACHE_DIR/$VENDORED_GDAL ]; then
