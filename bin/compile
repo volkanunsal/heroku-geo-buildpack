@@ -107,8 +107,8 @@ set-env GDAL_DATA "$APP_VENDOR/share/gdal"
 
 
 # Export env var for next build
-echo "BUNDLE_BUILD__RGEO=\"--with-geos-dir=$BUILD_DIR/$TARGET_VENDOR_DIR --with-opt-dir=$BUILD_DIR/$TARGET_VENDOR_DIR --with-geos-config=$BUILD_DIR/$TARGET_VENDOR_DIR/bin/geos-config\"" >> $BP_DIR/export
-set-default-env BUNDLE_BUILD__RGEO "--with-geos-dir=$BUILD_DIR/$TARGET_VENDOR_DIR --with-opt-dir=$BUILD_DIR/$TARGET_VENDOR_DIR --with-geos-config=$BUILD_DIR/$TARGET_VENDOR_DIR/bin/geos-config"
+echo "BUNDLE_BUILD__RGEO=\"--with-geos-dir=/app/.heroku/vendor --with-opt-dir=/app/.heroku/vendor --with-geos-config=/app/.heroku/vendor/bin/geos-config\"" >> $BP_DIR/export
+set-default-env BUNDLE_BUILD__RGEO "--with-geos-dir=/app/.heroku/vendor --with-opt-dir=/app/.heroku/vendor --with-geos-config=/app/.heroku/vendor/bin/geos-config"
 set-default-env LIBRARY_PATH "$APP_VENDOR/lib"
 set-default-env LD_LIBRARY_PATH "$APP_VENDOR/lib"
 set-default-env CPATH "$APP_VENDOR/include"
