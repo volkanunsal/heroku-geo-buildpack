@@ -22,7 +22,13 @@ BP_DIR=$(cd $(dirname ${0:-}); cd ..; pwd)
 PROFILE_PATH="$BUILD_DIR/.profile.d/geo.sh"
 mkdir -p $(dirname $PROFILE_PATH)
 
+EXPORTS_PATH="$BP_DIR/export"
+
 # Functions
+function set-export (){
+  echo "export $1=$2" >> $EXPORTS_PATH
+}
+
 function indent() {
   c='s/^/       /'
   case $(uname) in
@@ -98,6 +104,7 @@ done
 
 # App directories
 APP_VENDOR="/app/$TARGET_VENDOR_DIR"
+APP_VENDOR_BUILD="$BUILD_DIR/$TARGET_VENDOR_DIR"
 
 # Setup environment variables
 set-env GEOS_LIBRARY_PATH "$APP_VENDOR/lib"
@@ -107,11 +114,23 @@ set-env GDAL_DATA "$APP_VENDOR/share/gdal"
 
 
 # Export env var for next build
-echo "BUNDLE_BUILD__RGEO=\"--with-geos-dir=/app/.heroku/vendor --with-opt-dir=/app/.heroku/vendor --with-geos-config=/app/.heroku/vendor/bin/geos-config\"" >> $BP_DIR/export
-set-default-env BUNDLE_BUILD__RGEO "--with-geos-dir=/app/.heroku/vendor --with-opt-dir=/app/.heroku/vendor --with-geos-config=/app/.heroku/vendor/bin/geos-config"
+echo "BUNDLE_BUILD__RGEO=\"--with-geos-dir=$APP_VENDOR_BUILD --with-opt-dir=$APP_VENDOR_BUILD --with-geos-config=$APP_VENDOR_BUILD/bin/geos-config\"" >> $BP_DIR/export
+set-default-env BUNDLE_BUILD__RGEO "--with-geos-dir=$APP_VENDOR_BUILD --with-opt-dir=$APP_VENDOR_BUILD --with-geos-config=$APP_VENDOR_BUILD/bin/geos-config"
 set-default-env LIBRARY_PATH "$APP_VENDOR/lib"
 set-default-env LD_LIBRARY_PATH "$APP_VENDOR/lib"
 set-default-env CPATH "$APP_VENDOR/include"
 set-default-env PATH "$APP_VENDOR/bin"
+
+
+# Set up environment variables needed during the remainder of
+# the build process.. These can be read by subsequent buildpacks
+set-export GEOS_LIBRARY_PATH "$APP_VENDOR_BUILD/lib"
+set-export GDAL_LIBRARY_PATH "$APP_VENDOR_BUILD/lib"
+set-export PROJ4_LIBRARY_PATH "$APP_VENDOR_BUILD/lib"
+set-export GDAL_DATA "$APP_VENDOR_BUILD/share/gdal"
+set-export LIBRARY_PATH "$APP_VENDOR_BUILD/lib"
+set-export LD_LIBRARY_PATH "$APP_VENDOR_BUILD/lib"
+set-export CPATH "$APP_VENDOR_BUILD/include"
+set-export PATH "$APP_VENDOR_BUILD/bin:\$PATH"
 
 echo "-----> Vendoring geo libraries done"
